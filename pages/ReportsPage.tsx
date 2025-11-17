@@ -16,7 +16,9 @@ const StudentProgressCard: React.FC<{
   sessions: Session[];
 }> = ({ studentId, studentName, studentSubject, assessments, sessions }) => {
   const studentSessions = sessions.filter((s) => s.studentId === studentId);
-  const studentAssessments = assessments.filter((a) => a.studentId === studentId);
+  const studentAssessments = assessments.filter(
+    (a) => a.studentId === studentId
+  );
 
   const totalHours = Math.round(
     studentSessions.reduce((sum, s) => sum + s.durationMinutes, 0) / 60
@@ -47,7 +49,9 @@ const StudentProgressCard: React.FC<{
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-primary-50 p-3 rounded-lg">
               <p className="text-xs text-slate-500 mb-1">Total Hours</p>
-              <p className="text-lg font-bold text-primary-600">{totalHours}h</p>
+              <p className="text-lg font-bold text-primary-600">
+                {totalHours}h
+              </p>
             </div>
             <div className="bg-success-light p-3 rounded-lg">
               <p className="text-xs text-slate-500 mb-1">Avg. Score</p>

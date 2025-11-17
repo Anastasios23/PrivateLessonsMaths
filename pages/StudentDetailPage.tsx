@@ -555,7 +555,11 @@ export const StudentDetailPage: React.FC = () => {
             <Button
               variant={isCleanView ? "primary" : "secondary"}
               onClick={() => setIsCleanView(!isCleanView)}
-              title={isCleanView ? "Exit presentation mode" : "Enter presentation mode"}
+              title={
+                isCleanView
+                  ? "Exit presentation mode"
+                  : "Enter presentation mode"
+              }
             >
               {isCleanView ? "👁️ Exit view" : "👁️ Clean view"}
             </Button>
@@ -603,7 +607,8 @@ export const StudentDetailPage: React.FC = () => {
               {!isCleanView && (
                 <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <p className="text-sm text-blue-700">
-                    💡 Tip: Click "Clean view" at the top to hide edit buttons and show only key information for presentations.
+                    💡 Tip: Click "Clean view" at the top to hide edit buttons
+                    and show only key information for presentations.
                   </p>
                 </div>
               )}
@@ -646,7 +651,11 @@ export const StudentDetailPage: React.FC = () => {
               )}
 
               {/* Goals Card - Show in both views */}
-              <Card className={isCleanView ? "border-2 border-primary-200 bg-primary-50" : ""}>
+              <Card
+                className={
+                  isCleanView ? "border-2 border-primary-200 bg-primary-50" : ""
+                }
+              >
                 <CardHeader>
                   <CardTitle className={isCleanView ? "text-primary-700" : ""}>
                     🎯 Learning Goals
@@ -660,7 +669,13 @@ export const StudentDetailPage: React.FC = () => {
                           <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-primary-100 text-primary-600 flex-shrink-0 text-sm font-semibold">
                             {index + 1}
                           </span>
-                          <span className={isCleanView ? "text-base text-primary-900 font-medium" : "text-slate-700"}>
+                          <span
+                            className={
+                              isCleanView
+                                ? "text-base text-primary-900 font-medium"
+                                : "text-slate-700"
+                            }
+                          >
                             {goal}
                           </span>
                         </li>
@@ -750,7 +765,10 @@ export const StudentDetailPage: React.FC = () => {
 
               {/* Add Homework Button */}
               {!isCleanView && (
-                <Button onClick={handleOpenAddHomeworkModal} variant="secondary">
+                <Button
+                  onClick={handleOpenAddHomeworkModal}
+                  variant="secondary"
+                >
                   + Add Homework
                 </Button>
               )}
@@ -759,7 +777,9 @@ export const StudentDetailPage: React.FC = () => {
               <HomeworkList
                 homework={studentHomework}
                 onEdit={!isCleanView ? handleOpenHomeworkModal : undefined}
-                onSubmit={!isCleanView ? handleOpenSubmitHomeworkModal : undefined}
+                onSubmit={
+                  !isCleanView ? handleOpenSubmitHomeworkModal : undefined
+                }
               />
             </div>
           )}

@@ -74,7 +74,9 @@ const UpcomingSessions: React.FC<{
           </ul>
         ) : (
           <div className="text-center py-8">
-            <p className="text-slate-500 text-lg">No sessions scheduled for today.</p>
+            <p className="text-slate-500 text-lg">
+              No sessions scheduled for today.
+            </p>
             <p className="text-sm text-slate-400 mt-2">
               Why not plan ahead and add some lessons? 📚
             </p>
