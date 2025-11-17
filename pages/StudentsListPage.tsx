@@ -22,8 +22,16 @@ interface GroupManagementModal {
 }
 
 export const StudentsListPage: React.FC = () => {
-  const { students, loading, createStudent, updateStudent, deleteStudent } =
-    useAppContext();
+  const {
+    students,
+    loading,
+    createStudent,
+    updateStudent,
+    deleteStudent,
+    groups,
+    createGroup,
+    deleteGroup,
+  } = useAppContext();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterGroup, setFilterGroup] = useState("all");
   const [filterLevel, setFilterLevel] = useState("");
@@ -37,18 +45,23 @@ export const StudentsListPage: React.FC = () => {
   const [selectedGroupsInModal, setSelectedGroupsInModal] = useState<string[]>(
     []
   );
+  const [groupError, setGroupError] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    groupName: string;
+    studentCount: number;
+  } | null>(null);
   const navigate = useNavigate();
 
-  // Get all unique groups from all students
+  // Get all unique groups (from context + students)
   const allGroups = useMemo(() => {
-    const groupSet = new Set<string>();
+    const groupSet = new Set<string>(groups);
     students.forEach((s) => {
       if (s.groups && Array.isArray(s.groups)) {
         s.groups.forEach((g) => groupSet.add(g));
       }
     });
     return Array.from(groupSet).sort();
-  }, [students]);
+  }, [groups, students]);
 
   // Get students count by group
   const groupCounts = useMemo(() => {
@@ -196,6 +209,39 @@ export const StudentsListPage: React.FC = () => {
     }
   };
 
+  const handleCreateNewGroup = async () => {
+    try {
+      setGroupError("");
+      if (!newGroupInput.trim()) {
+        setGroupError("Group name cannot be empty");
+        return;
+      }
+      await createGroup(newGroupInput.trim());
+      setNewGroupInput("");
+      setShowCreateGroup(false);
+    } catch (error: any) {
+      setGroupError(error.message || "Failed to create group");
+    }
+  };
+
+  const handleDeleteGroup = (groupName: string) => {
+    const studentCount = students.filter(
+      (s) => s.groups && s.groups.includes(groupName)
+    ).length;
+    setDeleteConfirm({ groupName, studentCount });
+  };
+
+  const handleConfirmDeleteGroup = async () => {
+    if (!deleteConfirm) return;
+    try {
+      setGroupError("");
+      await deleteGroup(deleteConfirm.groupName);
+      setDeleteConfirm(null);
+    } catch (error: any) {
+      setGroupError(error.message || "Failed to delete group");
+    }
+  };
+
   if (loading)
     return (
       <div className="p-8 text-center text-slate-500">Loading students...</div>
@@ -236,26 +282,39 @@ export const StudentsListPage: React.FC = () => {
         {showCreateGroup && (
           <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-4 space-y-3">
             <h3 className="font-semibold text-purple-900">Create New Group</h3>
-            <p className="text-sm text-purple-700">
-              💡 Groups are created automatically when you assign students to
-              them. Click "Add Student" to create a new group by typing its
-              name.
-            </p>
+            {groupError && (
+              <div className="p-2 bg-red-100 text-red-700 text-sm rounded border border-red-300">
+                {groupError}
+              </div>
+            )}
             <div className="flex gap-2">
+              <input
+                type="text"
+                value={newGroupInput}
+                onChange={(e) => setNewGroupInput(e.target.value)}
+                placeholder="Enter group name (e.g., Group A, Advanced Class)"
+                className="flex-1 px-4 py-2 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleCreateNewGroup();
+                  }
+                }}
+              />
               <button
-                onClick={() => setShowCreateGroup(false)}
-                className="flex-1 px-4 py-2 bg-slate-300 text-slate-700 rounded-lg hover:bg-slate-400 font-medium transition-colors"
+                onClick={handleCreateNewGroup}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition-colors"
               >
-                Got it, close
+                Create
               </button>
               <button
                 onClick={() => {
                   setShowCreateGroup(false);
-                  handleOpenModal();
+                  setNewGroupInput("");
+                  setGroupError("");
                 }}
-                className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition-colors"
+                className="px-4 py-2 bg-slate-300 text-slate-700 rounded-lg hover:bg-slate-400 font-medium transition-colors"
               >
-                Add Student Now
+                Cancel
               </button>
             </div>
           </div>
@@ -328,17 +387,28 @@ export const StudentsListPage: React.FC = () => {
               All Students
             </button>
             {allGroups.map((group) => (
-              <button
-                key={group}
-                onClick={() => setFilterGroup(group)}
-                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                  filterGroup === group
-                    ? "bg-sky-600 text-white"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
-              >
-                {group} ({groupCounts[group] || 0})
-              </button>
+              <div key={group} className="relative group">
+                <button
+                  onClick={() => setFilterGroup(group)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                    filterGroup === group
+                      ? "bg-sky-600 text-white"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {group} ({groupCounts[group] || 0})
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteGroup(group);
+                  }}
+                  className="absolute top-0 right-0 hidden group-hover:block transform translate-x-1 -translate-y-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                  title="Delete group"
+                >
+                  ×
+                </button>
+              </div>
             ))}
             {stats.unassigned > 0 && (
               <button
@@ -747,6 +817,56 @@ export const StudentsListPage: React.FC = () => {
                 className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 font-medium"
               >
                 Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Group Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 space-y-4 my-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <span className="text-red-600 text-lg">⚠️</span>
+              </div>
+              <h2 className="text-lg font-bold text-slate-800">
+                Delete Group?
+              </h2>
+            </div>
+
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
+              <p className="text-slate-700">
+                You are about to delete the group{" "}
+                <strong>"{deleteConfirm.groupName}"</strong>
+              </p>
+              {deleteConfirm.studentCount > 0 && (
+                <div className="bg-white border border-red-200 rounded p-3">
+                  <p className="text-sm text-slate-600">
+                    📌 <strong>{deleteConfirm.studentCount}</strong> student
+                    {deleteConfirm.studentCount !== 1 ? "s" : ""} will be
+                    removed from this group
+                  </p>
+                </div>
+              )}
+              <p className="text-sm text-red-700">
+                ❌ This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDeleteGroup}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors"
+              >
+                Delete Group
               </button>
             </div>
           </div>

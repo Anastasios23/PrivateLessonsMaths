@@ -32,6 +32,7 @@ interface AppContextType {
   homework: Homework[];
   assessments: Assessment[];
   progressNotes: ProgressNote[];
+  groups: string[];
   fetchData: () => void;
   updateHomework: (homework: Homework) => Promise<void>;
   createHomework: (
@@ -50,6 +51,8 @@ interface AppContextType {
   createAssessment: (
     assessmentData: Omit<Assessment, "id" | "createdAt">
   ) => Promise<Assessment>;
+  createGroup: (groupName: string) => Promise<void>;
+  deleteGroup: (groupName: string) => Promise<void>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -66,6 +69,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [homework, setHomework] = useState<Homework[]>([]);
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [progressNotes, setProgressNotes] = useState<ProgressNote[]>([]);
+  const [groups, setGroups] = useState<string[]>([]);
 
   const login = (email: string, pass: string) => {
     // Mock login
@@ -109,6 +113,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
       setHomework(homeworkData);
       setProgressNotes(progressNotesData);
       setAssessments(assessmentsData);
+
+      // Load groups from localStorage or extract from students
+      const savedGroups = localStorage.getItem("tutorGroups");
+      if (savedGroups) {
+        setGroups(JSON.parse(savedGroups));
+      } else {
+        // Extract groups from students
+        const extractedGroups = new Set<string>();
+        studentsData.forEach((s) => {
+          if (s.groups && Array.isArray(s.groups)) {
+            s.groups.forEach((g) => extractedGroups.add(g));
+          }
+        });
+        setGroups(Array.from(extractedGroups).sort());
+      }
     } catch (error) {
       console.error("Failed to fetch data", error);
     } finally {
@@ -232,6 +251,51 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const createGroup = async (groupName: string) => {
+    try {
+      const trimmedName = groupName.trim();
+      if (!trimmedName) {
+        throw new Error("Group name cannot be empty");
+      }
+      if (groups.includes(trimmedName)) {
+        throw new Error("Group already exists");
+      }
+      const updatedGroups = [...groups, trimmedName].sort();
+      setGroups(updatedGroups);
+      localStorage.setItem("tutorGroups", JSON.stringify(updatedGroups));
+    } catch (error) {
+      console.error("Failed to create group", error);
+      throw error;
+    }
+  };
+
+  const deleteGroup = async (groupName: string) => {
+    try {
+      // Remove group from all students
+      const updatedStudents = students.map((s) => ({
+        ...s,
+        groups: s.groups?.filter((g) => g !== groupName),
+      }));
+
+      // Update students in storage
+      await Promise.all(
+        updatedStudents.map((s) =>
+          s.groups && s.groups.length > 0
+            ? updateStudent(s.id, { groups: s.groups })
+            : updateStudent(s.id, { groups: undefined })
+        )
+      );
+
+      // Remove from groups list
+      const updatedGroups = groups.filter((g) => g !== groupName);
+      setGroups(updatedGroups);
+      localStorage.setItem("tutorGroups", JSON.stringify(updatedGroups));
+    } catch (error) {
+      console.error("Failed to delete group", error);
+      throw error;
+    }
+  };
+
   // On initial load, check for a "logged in" user.
   // Here we just mock it. In a real app, you'd check localStorage/cookies for a token.
   useEffect(() => {
@@ -253,6 +317,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         homework,
         assessments,
         progressNotes,
+        groups,
         fetchData,
         updateHomework,
         createHomework,
@@ -263,6 +328,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         updateSession,
         deleteSession,
         createAssessment,
+        createGroup,
+        deleteGroup,
       }}
     >
       {children}
