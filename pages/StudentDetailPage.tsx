@@ -336,7 +336,13 @@ const ProgressNotesList: React.FC<{ notes: ProgressNote[] }> = ({ notes }) => (
   </div>
 );
 
-type Tab = "overview" | "sessions" | "homework" | "assessments" | "progress";
+type Tab =
+  | "overview"
+  | "sessions"
+  | "homework"
+  | "assessments"
+  | "progress"
+  | "daily-notes";
 
 export const StudentDetailPage: React.FC = () => {
   const { studentId } = useParams<{ studentId: string }>();
@@ -353,6 +359,7 @@ export const StudentDetailPage: React.FC = () => {
     createSession,
     createHomework,
     createAssessment,
+    updateSession,
   } = useAppContext();
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [isHomeworkModalOpen, setIsHomeworkModalOpen] = useState(false);
@@ -370,6 +377,9 @@ export const StudentDetailPage: React.FC = () => {
   const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
   const [isDeleteConfirming, setIsDeleteConfirming] = useState(false);
   const [isCleanView, setIsCleanView] = useState(false);
+  const [isEditNotesModalOpen, setIsEditNotesModalOpen] = useState(false);
+  const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+  const [noteEditText, setNoteEditText] = useState("");
 
   const student = students.find((s) => s.id === studentId);
   const studentSessions = sessions.filter((s) => s.studentId === studentId);
@@ -474,6 +484,28 @@ export const StudentDetailPage: React.FC = () => {
       await deleteStudent(student.id);
       // Navigate back to students list after deletion
       window.location.hash = "#/students";
+    }
+  };
+
+  const handleOpenEditNotesModal = (session: Session) => {
+    setSelectedSession(session);
+    setNoteEditText(session.notes || "");
+    setIsEditNotesModalOpen(true);
+  };
+
+  const handleCloseEditNotesModal = () => {
+    setSelectedSession(null);
+    setNoteEditText("");
+    setIsEditNotesModalOpen(false);
+  };
+
+  const handleSaveNotes = async () => {
+    if (selectedSession) {
+      await updateSession(selectedSession.id, {
+        ...selectedSession,
+        notes: noteEditText,
+      });
+      handleCloseEditNotesModal();
     }
   };
 
@@ -597,6 +629,12 @@ export const StudentDetailPage: React.FC = () => {
             onClick={() => setActiveTab("progress")}
           >
             Progress
+          </TabButton>
+          <TabButton
+            active={activeTab === "daily-notes"}
+            onClick={() => setActiveTab("daily-notes")}
+          >
+            📝 Daily Notes
           </TabButton>
         </div>
 
@@ -917,6 +955,102 @@ export const StudentDetailPage: React.FC = () => {
           {activeTab === "progress" && (
             <ProgressNotesList notes={studentProgressNotes} />
           )}
+          {activeTab === "daily-notes" && (
+            <div className="space-y-4">
+              {studentSessions.length === 0 ? (
+                <div className="text-center p-8 text-slate-500 bg-slate-50 rounded-lg">
+                  <p>No lessons recorded yet</p>
+                </div>
+              ) : (
+                [...studentSessions]
+                  .sort(
+                    (a, b) =>
+                      new Date(b.date + "T" + b.startTime).getTime() -
+                      new Date(a.date + "T" + a.startTime).getTime()
+                  )
+                  .map((session) => (
+                    <Card
+                      key={session.id}
+                      className="cursor-pointer hover:shadow-md transition-shadow"
+                      onClick={() =>
+                        !isCleanView && handleOpenEditNotesModal(session)
+                      }
+                    >
+                      <CardContent className="p-4">
+                        <div className="space-y-3">
+                          {/* Header */}
+                          <div className="flex justify-between items-start gap-4">
+                            <div className="flex-1">
+                              <p className="font-semibold text-slate-800">
+                                📅{" "}
+                                {new Date(session.date).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    weekday: "short",
+                                    month: "short",
+                                    day: "numeric",
+                                  }
+                                )}
+                                {" • "}
+                                <span className="text-slate-600">
+                                  {session.startTime}
+                                </span>
+                              </p>
+                              <p className="text-sm text-slate-600 mt-1">
+                                📚 {session.topic}
+                              </p>
+                            </div>
+                            {!isCleanView && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenEditNotesModal(session);
+                                }}
+                              >
+                                <PencilIcon className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+
+                          {/* Notes Section */}
+                          <div className="p-3 bg-slate-50 rounded-md border border-slate-200">
+                            {session.notes ? (
+                              <div>
+                                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+                                  Notes
+                                </p>
+                                <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                                  {session.notes}
+                                </p>
+                              </div>
+                            ) : (
+                              <p className="text-sm text-slate-400 italic">
+                                {!isCleanView
+                                  ? "Click to add notes for this lesson..."
+                                  : "No notes"}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Additional Info */}
+                          <div className="flex gap-4 text-xs text-slate-600">
+                            <span>⏱️ {session.durationMinutes} min</span>
+                            <span>🏷️ {session.sessionType || "regular"}</span>
+                            {session.activities && (
+                              <span>
+                                ✅ {session.activities.substring(0, 30)}...
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -1035,6 +1169,63 @@ export const StudentDetailPage: React.FC = () => {
               >
                 Delete Student
               </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* Edit Lesson Notes Modal */}
+      {isEditNotesModalOpen && selectedSession && (
+        <Modal
+          isOpen={isEditNotesModalOpen}
+          onClose={handleCloseEditNotesModal}
+          title={`Edit Notes - ${new Date(
+            selectedSession.date
+          ).toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+          })} at ${selectedSession.startTime}`}
+        >
+          <div className="space-y-4">
+            {/* Lesson Details */}
+            <div className="p-3 bg-slate-50 rounded-md border border-slate-200">
+              <p className="text-sm font-semibold text-slate-700">
+                📚 {selectedSession.topic}
+              </p>
+              <p className="text-xs text-slate-600 mt-1">
+                ⏱️ {selectedSession.durationMinutes} minutes
+              </p>
+              {selectedSession.activities && (
+                <p className="text-xs text-slate-600 mt-1">
+                  ✅ Activities: {selectedSession.activities}
+                </p>
+              )}
+            </div>
+
+            {/* Notes Textarea */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                📝 Lesson Notes
+              </label>
+              <textarea
+                value={noteEditText}
+                onChange={(e) => setNoteEditText(e.target.value)}
+                placeholder="Add notes about this lesson (student progress, topics covered, homework assigned, etc.)"
+                rows={6}
+                className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+              />
+              <p className="text-xs text-slate-500 mt-1">
+                {noteEditText.length} characters
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+              <Button variant="secondary" onClick={handleCloseEditNotesModal}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveNotes}>Save Notes</Button>
             </div>
           </div>
         </Modal>
