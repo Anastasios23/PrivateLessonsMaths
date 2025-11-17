@@ -3,6 +3,7 @@
 ## Quick Color Guide
 
 ### Primary Colors
+
 ```
 Sky Blue (Primary)
   Light:    #e0f2fe  (backgrounds)
@@ -16,6 +17,7 @@ Slate Gray (Neutral)
 ```
 
 ### Status Colors
+
 ```
 ✅ Success Green:    #22c55e (completed, good)
 ⚠️  Warning Orange:   #f59e0b (pending, needs attention)
@@ -26,6 +28,7 @@ Slate Gray (Neutral)
 ## Typography
 
 ### Font Sizes
+
 ```
 Headings:
   h1: 36px (page title)
@@ -41,6 +44,7 @@ Body Text:
 ```
 
 ### Font Weights
+
 ```
 Light:      300  (secondary text)
 Normal:     400  (body text)
@@ -100,6 +104,7 @@ Large:      strong (25px shadow)
 ### Button Variants
 
 **Primary Button** (main actions)
+
 ```
 Background: #0ea5e9 (sky-500)
 Text:       white
@@ -109,6 +114,7 @@ Border Radius: 8px
 ```
 
 **Secondary Button** (alternate actions)
+
 ```
 Background: #f1f5f9 (slate-100)
 Text:       #475569 (slate-600)
@@ -118,6 +124,7 @@ Border Radius: 8px
 ```
 
 **Ghost Button** (minimal actions)
+
 ```
 Background: transparent
 Text:       #475569 (slate-600)
@@ -127,6 +134,7 @@ Border Radius: 6px
 ```
 
 ### Card Pattern
+
 ```
 Background: white
 Border:     1px solid #e2e8f0 (slate-200)
@@ -137,6 +145,7 @@ Margin:     16px bottom
 ```
 
 ### Input Pattern
+
 ```
 Background: white
 Border:     1px solid #cbd5e1 (slate-300)
@@ -213,14 +222,15 @@ Current Page:
 ### Using the Design System
 
 **In Tailwind Classes:**
+
 ```tsx
 // Button (primary)
-className="px-4 py-2.5 bg-primary-500 hover:bg-primary-600 
-           text-white font-semibold rounded-lg 
+className="px-4 py-2.5 bg-primary-500 hover:bg-primary-600
+           text-white font-semibold rounded-lg
            transition-colors duration-250"
 
 // Card
-className="bg-white border border-slate-200 rounded-lg 
+className="bg-white border border-slate-200 rounded-lg
            shadow-md p-6 space-y-4"
 
 // Responsive Grid
@@ -233,6 +243,7 @@ className="text-sm text-slate-600"             {/* Label */}
 ```
 
 **In React Components:**
+
 ```tsx
 import { DESIGN_SYSTEM } from "../constants";
 
