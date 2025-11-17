@@ -11,6 +11,7 @@ import { AuthPage } from "./pages/AuthPage";
 import { useAppContext } from "./hooks/useAppContext";
 import { SignUpPage } from "./pages/SignUpPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
+import { CalendarPage } from "./pages/CalendarPage";
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
   children,
@@ -80,6 +81,16 @@ const AppRoutes: React.FC = () => {
           <PrivateRoute>
             <Layout>
               <ReportsPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <CalendarPage />
             </Layout>
           </PrivateRoute>
         }

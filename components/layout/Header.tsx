@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../hooks/useAppContext";
-import { HomeIcon, UsersIcon, BookOpenIcon } from "../icons";
+import { HomeIcon, UsersIcon, BookOpenIcon, CalendarIcon } from "../icons";
 
 export const Header: React.FC = () => {
   const { user } = useAppContext();
@@ -60,6 +60,11 @@ export const Header: React.FC = () => {
             icon={<UsersIcon className="h-4 w-4" />}
             label="Students"
             path="/students"
+          />
+          <NavButton
+            icon={<CalendarIcon className="h-4 w-4" />}
+            label="Calendar"
+            path="/calendar"
           />
           <NavButton
             icon={<BookOpenIcon className="h-4 w-4" />}

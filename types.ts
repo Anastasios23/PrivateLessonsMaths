@@ -22,6 +22,7 @@ export interface Student {
   notes: string; // free text notes
   startDate: string;
   createdAt: string;
+  groups?: string[]; // optional array of class/group names (e.g., ["Group A", "Advanced"])
 }
 
 export enum SessionStatus {

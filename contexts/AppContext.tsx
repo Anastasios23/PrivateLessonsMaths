@@ -45,6 +45,8 @@ interface AppContextType {
   createSession: (
     sessionData: Omit<Session, "id" | "createdAt">
   ) => Promise<Session>;
+  updateSession: (id: string, updates: Partial<Session>) => Promise<void>;
+  deleteSession: (id: string) => Promise<void>;
   createAssessment: (
     assessmentData: Omit<Assessment, "id" | "createdAt">
   ) => Promise<Assessment>;
@@ -178,6 +180,30 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const updateSession = async (id: string, updates: Partial<Session>) => {
+    try {
+      const updatedSession = await sessionsService.updateSession(id, updates);
+      if (updatedSession) {
+        setSessions((prevSessions) =>
+          prevSessions.map((s) => (s.id === id ? updatedSession : s))
+        );
+      }
+    } catch (error) {
+      console.error("Failed to update session", error);
+      throw error;
+    }
+  };
+
+  const deleteSession = async (id: string) => {
+    try {
+      await sessionsService.deleteSession(id);
+      setSessions((prevSessions) => prevSessions.filter((s) => s.id !== id));
+    } catch (error) {
+      console.error("Failed to delete session", error);
+      throw error;
+    }
+  };
+
   const createHomework = async (
     homeworkData: Omit<Homework, "id" | "createdAt">
   ) => {
@@ -234,6 +260,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         updateStudent,
         deleteStudent,
         createSession,
+        updateSession,
+        deleteSession,
         createAssessment,
       }}
     >

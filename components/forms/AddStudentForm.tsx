@@ -20,6 +20,7 @@ export const AddStudentForm: React.FC<AddStudentFormProps> = ({
   const [parentName, setParentName] = useState("");
   const [parentPhone, setParentPhone] = useState("");
   const [parentEmail, setParentEmail] = useState("");
+  const [groups, setGroups] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -66,6 +67,7 @@ export const AddStudentForm: React.FC<AddStudentFormProps> = ({
           email: parentEmail,
         },
         startDate: new Date().toISOString(),
+        groups: groups.length > 0 ? groups : undefined,
       };
       await onSave(studentData);
     } catch (err) {
@@ -141,6 +143,55 @@ export const AddStudentForm: React.FC<AddStudentFormProps> = ({
             placeholder="e.g., Intermediate, Beginner"
             className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-2">
+            Groups / Classes (Optional - select multiple)
+          </label>
+          <div className="space-y-2">
+            <p className="text-xs text-slate-500">
+              You can assign a student to multiple groups
+            </p>
+            <div className="flex flex-wrap gap-2 p-3 border border-slate-300 rounded-md bg-slate-50 min-h-12">
+              {groups.length === 0 ? (
+                <p className="text-sm text-slate-400">No groups selected yet</p>
+              ) : (
+                groups.map((g, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center gap-2 px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-sm font-medium"
+                  >
+                    {g}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setGroups(groups.filter((_, i) => i !== idx))
+                      }
+                      className="text-sky-700 hover:text-sky-900 font-bold"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))
+              )}
+            </div>
+            <input
+              type="text"
+              placeholder="Type group name and press Enter (e.g., Group A, Advanced, Class 2024)"
+              onKeyPress={(e) => {
+                if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                  const newGroup = e.currentTarget.value.trim();
+                  if (!groups.includes(newGroup)) {
+                    setGroups([...groups, newGroup]);
+                  }
+                  e.currentTarget.value = "";
+                  e.preventDefault();
+                }
+              }}
+              className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+            />
+          </div>
         </div>
       </div>
 
