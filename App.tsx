@@ -6,6 +6,7 @@ import { Layout } from './components/layout/Layout';
 import { DashboardPage } from './pages/DashboardPage';
 import { StudentsListPage } from './pages/StudentsListPage';
 import { StudentDetailPage } from './pages/StudentDetailPage';
+import { ReportsPage } from './pages/ReportsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AuthPage } from './pages/AuthPage';
 import { useAppContext } from './hooks/useAppContext';
@@ -34,6 +35,7 @@ const AppRoutes: React.FC = () => {
             <Route path="/" element={<PrivateRoute><Layout><DashboardPage /></Layout></PrivateRoute>} />
             <Route path="/students" element={<PrivateRoute><Layout><StudentsListPage /></Layout></PrivateRoute>} />
             <Route path="/students/:studentId" element={<PrivateRoute><Layout><StudentDetailPage /></Layout></PrivateRoute>} />
+            <Route path="/reports" element={<PrivateRoute><Layout><ReportsPage /></Layout></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><Layout><SettingsPage /></Layout></PrivateRoute>} />
             <Route path="*" element={<Navigate to={isAuthenticated ? "/" : "/login"} replace />} />
         </Routes>
