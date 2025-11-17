@@ -1,0 +1,5 @@
+{
+  "name": "TutorTrack",
+  "description": "A tiny web app for private tutors to track students, sessions, homework, and progress. It helps tutors stay organized by providing a clear log of student activities, upcoming schedules, and progress notes.",
+  "requestFramePermissions": []
+}
