@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../hooks/useAppContext";
+import { Modal } from "../components/ui/Modal";
+import { Button } from "../components/ui/Button";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -272,6 +274,7 @@ interface LessonEventProps {
   onEdit: (session: any) => void;
   onDelete: (sessionId: string) => void;
   onViewStudent: (studentId: string) => void;
+  onViewNotes: (session: any) => void;
 }
 
 const LessonEvent: React.FC<LessonEventProps> = ({
@@ -281,6 +284,7 @@ const LessonEvent: React.FC<LessonEventProps> = ({
   onEdit,
   onDelete,
   onViewStudent,
+  onViewNotes,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -334,6 +338,16 @@ const LessonEvent: React.FC<LessonEventProps> = ({
         <div className="absolute -top-8 right-0 bg-white border border-slate-200 rounded shadow-lg z-40 flex gap-1 p-1">
           <button
             onClick={() => {
+              onViewNotes(session);
+              setShowMenu(false);
+            }}
+            className="p-1 hover:bg-purple-100 rounded text-purple-600 text-xs font-bold"
+            title="View notes"
+          >
+            📝
+          </button>
+          <button
+            onClick={() => {
               onEdit(session);
               setShowMenu(false);
             }}
@@ -380,6 +394,7 @@ interface MonthViewProps {
   onEditLesson: (session: any) => void;
   onDeleteLesson: (sessionId: string) => void;
   onViewStudent: (studentId: string) => void;
+  onViewNotes: (session: any) => void;
 }
 
 const MonthView: React.FC<MonthViewProps> = ({
@@ -392,6 +407,7 @@ const MonthView: React.FC<MonthViewProps> = ({
   onEditLesson,
   onDeleteLesson,
   onViewStudent,
+  onViewNotes,
 }) => {
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -515,6 +531,7 @@ const MonthView: React.FC<MonthViewProps> = ({
                         onEdit={onEditLesson}
                         onDelete={onDeleteLesson}
                         onViewStudent={onViewStudent}
+                        onViewNotes={onViewNotes}
                       />
                     ))
                   )}
@@ -538,6 +555,7 @@ interface WeekViewProps {
   onEditLesson: (session: any) => void;
   onDeleteLesson: (sessionId: string) => void;
   onViewStudent: (studentId: string) => void;
+  onViewNotes: (session: any) => void;
 }
 
 const WeekView: React.FC<WeekViewProps> = ({
@@ -550,6 +568,7 @@ const WeekView: React.FC<WeekViewProps> = ({
   onEditLesson,
   onDeleteLesson,
   onViewStudent,
+  onViewNotes,
 }) => {
   const timeSlots = Array.from({ length: 13 }, (_, i) => {
     const hour = 8 + i;
@@ -650,6 +669,7 @@ const WeekView: React.FC<WeekViewProps> = ({
                         onEdit={onEditLesson}
                         onDelete={onDeleteLesson}
                         onViewStudent={onViewStudent}
+                        onViewNotes={onViewNotes}
                       />
                     ))}
                 </div>
@@ -676,6 +696,8 @@ export const CalendarPage: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [filterStudentId, setFilterStudentId] = useState("all");
   const [filterLessonType, setFilterLessonType] = useState("all");
+  const [isViewNotesModalOpen, setIsViewNotesModalOpen] = useState(false);
+  const [sessionToView, setSessionToView] = useState<any>(null);
 
   // Keyboard shortcuts
   React.useEffect(() => {
@@ -783,6 +805,16 @@ export const CalendarPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleViewNotes = (session: any) => {
+    setSessionToView(session);
+    setIsViewNotesModalOpen(true);
+  };
+
+  const handleCloseViewNotes = () => {
+    setSessionToView(null);
+    setIsViewNotesModalOpen(false);
   };
 
   const handleSaveLesson = async (data: any) => {
@@ -1266,6 +1298,7 @@ export const CalendarPage: React.FC = () => {
           onEditLesson={handleEditLesson}
           onDeleteLesson={handleDeleteLesson}
           onViewStudent={handleViewStudent}
+          onViewNotes={handleViewNotes}
         />
       ) : (
         <WeekView
@@ -1278,6 +1311,7 @@ export const CalendarPage: React.FC = () => {
           onEditLesson={handleEditLesson}
           onDeleteLesson={handleDeleteLesson}
           onViewStudent={handleViewStudent}
+          onViewNotes={handleViewNotes}
         />
       )}
 
@@ -1321,6 +1355,97 @@ export const CalendarPage: React.FC = () => {
         }}
         isLoading={isLoading}
       />
+
+      {/* View Notes Modal */}
+      {isViewNotesModalOpen && sessionToView && (
+        <Modal
+          isOpen={isViewNotesModalOpen}
+          onClose={handleCloseViewNotes}
+          title="Lesson Notes"
+        >
+          <div className="space-y-4 max-w-2xl">
+            {/* Lesson Details Header */}
+            <div className="p-4 bg-gradient-to-r from-primary-50 to-primary-100 rounded-lg border border-primary-200">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold text-primary-900">
+                    📅{" "}
+                    {new Date(sessionToView.date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                  <span className="text-lg font-semibold text-primary-900">
+                    at {sessionToView.startTime}
+                  </span>
+                </div>
+                <p className="text-sm text-primary-800">
+                  📚 <span className="font-medium">{sessionToView.topic}</span>
+                </p>
+                <p className="text-sm text-primary-800">
+                  👤{" "}
+                  <span className="font-medium">
+                    {students.find((s) => s.id === sessionToView.studentId)
+                      ?.fullName || "Unknown Student"}
+                  </span>
+                </p>
+                <div className="flex gap-4 text-xs text-primary-700 pt-2">
+                  <span>⏱️ {sessionToView.durationMinutes} minutes</span>
+                  <span>🏷️ {sessionToView.sessionType || "regular"}</span>
+                  {sessionToView.activities && (
+                    <span>✅ {sessionToView.activities}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Full Notes Display */}
+            <div className="p-4 bg-slate-50 rounded-lg border border-slate-300">
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
+                📝 Lesson Notes
+              </p>
+              {sessionToView.notes ? (
+                <div className="prose prose-sm max-w-none">
+                  <p className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed font-normal">
+                    {sessionToView.notes}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-slate-500 italic">
+                  No notes recorded for this lesson.
+                </p>
+              )}
+              {sessionToView.notes && (
+                <p className="text-xs text-slate-500 mt-3">
+                  Word count: {sessionToView.notes.split(/\s+/).length} words
+                </p>
+              )}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-between items-center pt-4 border-t border-slate-200">
+              <div className="text-xs text-slate-500">
+                Updated: {new Date(sessionToView.date).toLocaleDateString()}
+              </div>
+              <div className="flex gap-3">
+                <Button variant="secondary" onClick={handleCloseViewNotes}>
+                  Close
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleCloseViewNotes();
+                    handleEditLesson(sessionToView);
+                  }}
+                >
+                  <PencilIcon className="h-4 w-4 mr-2" />
+                  Edit Lesson
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

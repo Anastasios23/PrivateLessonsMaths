@@ -380,6 +380,8 @@ export const StudentDetailPage: React.FC = () => {
   const [isEditNotesModalOpen, setIsEditNotesModalOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [noteEditText, setNoteEditText] = useState("");
+  const [isViewNoteModalOpen, setIsViewNoteModalOpen] = useState(false);
+  const [noteToView, setNoteToView] = useState<Session | null>(null);
 
   const student = students.find((s) => s.id === studentId);
   const studentSessions = sessions.filter((s) => s.studentId === studentId);
@@ -507,6 +509,16 @@ export const StudentDetailPage: React.FC = () => {
       });
       handleCloseEditNotesModal();
     }
+  };
+
+  const handleOpenViewNoteModal = (session: Session) => {
+    setNoteToView(session);
+    setIsViewNoteModalOpen(true);
+  };
+
+  const handleCloseViewNoteModal = () => {
+    setNoteToView(null);
+    setIsViewNoteModalOpen(false);
   };
 
   // Calculate homework completion rate (last 4 weeks)
@@ -1015,13 +1027,21 @@ export const StudentDetailPage: React.FC = () => {
                           </div>
 
                           {/* Notes Section */}
-                          <div className="p-3 bg-slate-50 rounded-md border border-slate-200">
+                          <div
+                            className="p-3 bg-slate-50 rounded-md border border-slate-200 cursor-pointer hover:bg-slate-100 transition-colors"
+                            onClick={() =>
+                              session.notes && handleOpenViewNoteModal(session)
+                            }
+                          >
                             {session.notes ? (
                               <div>
                                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
-                                  Notes
+                                  Notes{" "}
+                                  <span className="text-slate-400 font-normal">
+                                    (click to expand)
+                                  </span>
                                 </p>
-                                <p className="text-sm text-slate-700 whitespace-pre-wrap">
+                                <p className="text-sm text-slate-700 whitespace-pre-wrap line-clamp-3">
                                   {session.notes}
                                 </p>
                               </div>
@@ -1226,6 +1246,84 @@ export const StudentDetailPage: React.FC = () => {
                 Cancel
               </Button>
               <Button onClick={handleSaveNotes}>Save Notes</Button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {/* View Note Modal */}
+      {isViewNoteModalOpen && noteToView && (
+        <Modal
+          isOpen={isViewNoteModalOpen}
+          onClose={handleCloseViewNoteModal}
+          title={`Lesson Notes`}
+        >
+          <div className="space-y-4 max-w-2xl">
+            {/* Lesson Details Header */}
+            <div className="p-4 bg-gradient-to-r from-primary-50 to-primary-100 rounded-lg border border-primary-200">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-semibold text-primary-900">
+                    📅{" "}
+                    {new Date(noteToView.date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                  <span className="text-lg font-semibold text-primary-900">
+                    at {noteToView.startTime}
+                  </span>
+                </div>
+                <p className="text-sm text-primary-800">
+                  📚 <span className="font-medium">{noteToView.topic}</span>
+                </p>
+                <div className="flex gap-4 text-xs text-primary-700 pt-2">
+                  <span>⏱️ {noteToView.durationMinutes} minutes</span>
+                  <span>🏷️ {noteToView.sessionType || "regular"}</span>
+                  {noteToView.activities && (
+                    <span>✅ {noteToView.activities}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Full Notes Display */}
+            <div className="p-4 bg-slate-50 rounded-lg border border-slate-300">
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider mb-3">
+                📝 Lesson Notes
+              </p>
+              <div className="prose prose-sm max-w-none">
+                <p className="text-sm text-slate-800 whitespace-pre-wrap leading-relaxed font-normal">
+                  {noteToView.notes}
+                </p>
+              </div>
+              <p className="text-xs text-slate-500 mt-3">
+                Word count: {noteToView.notes?.split(/\s+/).length || 0} words
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-between items-center pt-4 border-t border-slate-200">
+              <div className="text-xs text-slate-500">
+                Updated: {new Date(noteToView.date).toLocaleDateString()}
+              </div>
+              <div className="flex gap-3">
+                <Button variant="secondary" onClick={handleCloseViewNoteModal}>
+                  Close
+                </Button>
+                {!isCleanView && (
+                  <Button
+                    onClick={() => {
+                      handleCloseViewNoteModal();
+                      handleOpenEditNotesModal(noteToView);
+                    }}
+                  >
+                    <PencilIcon className="h-4 w-4 mr-2" />
+                    Edit Notes
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </Modal>
