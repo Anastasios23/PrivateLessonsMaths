@@ -46,7 +46,9 @@ export const StudentGradesPage: React.FC = () => {
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-blue-600">↑ +2%</div>
-              <p className="text-sm text-slate-600 mt-2">Trend (Last 4 weeks)</p>
+              <p className="text-sm text-slate-600 mt-2">
+                Trend (Last 4 weeks)
+              </p>
             </div>
           </div>
         </div>
@@ -165,9 +167,13 @@ export const StudentGradesPage: React.FC = () => {
               </thead>
               <tbody>
                 <tr className="border-b border-slate-100 hover:bg-slate-50">
-                  <td className="py-3 px-4 text-slate-900">Test 4: Advanced Topics</td>
+                  <td className="py-3 px-4 text-slate-900">
+                    Test 4: Advanced Topics
+                  </td>
                   <td className="py-3 px-4 text-slate-600">Test</td>
-                  <td className="py-3 px-4 font-semibold text-slate-900">92/100</td>
+                  <td className="py-3 px-4 font-semibold text-slate-900">
+                    92/100
+                  </td>
                   <td className="py-3 px-4">
                     <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
                       92%
@@ -176,9 +182,13 @@ export const StudentGradesPage: React.FC = () => {
                   <td className="py-3 px-4 text-slate-600">Nov 18, 2025</td>
                 </tr>
                 <tr className="border-b border-slate-100 hover:bg-slate-50">
-                  <td className="py-3 px-4 text-slate-900">Quiz 6: Quadratic Equations</td>
+                  <td className="py-3 px-4 text-slate-900">
+                    Quiz 6: Quadratic Equations
+                  </td>
                   <td className="py-3 px-4 text-slate-600">Quiz</td>
-                  <td className="py-3 px-4 font-semibold text-slate-900">17/20</td>
+                  <td className="py-3 px-4 font-semibold text-slate-900">
+                    17/20
+                  </td>
                   <td className="py-3 px-4">
                     <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
                       85%
@@ -187,9 +197,13 @@ export const StudentGradesPage: React.FC = () => {
                   <td className="py-3 px-4 text-slate-600">Nov 15, 2025</td>
                 </tr>
                 <tr className="border-b border-slate-100 hover:bg-slate-50">
-                  <td className="py-3 px-4 text-slate-900">Homework 5: Practice Set</td>
+                  <td className="py-3 px-4 text-slate-900">
+                    Homework 5: Practice Set
+                  </td>
                   <td className="py-3 px-4 text-slate-600">Homework</td>
-                  <td className="py-3 px-4 font-semibold text-slate-900">19/20</td>
+                  <td className="py-3 px-4 font-semibold text-slate-900">
+                    19/20
+                  </td>
                   <td className="py-3 px-4">
                     <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
                       95%
@@ -198,9 +212,13 @@ export const StudentGradesPage: React.FC = () => {
                   <td className="py-3 px-4 text-slate-600">Nov 12, 2025</td>
                 </tr>
                 <tr className="border-b border-slate-100 hover:bg-slate-50">
-                  <td className="py-3 px-4 text-slate-900">Test 3: Linear Systems</td>
+                  <td className="py-3 px-4 text-slate-900">
+                    Test 3: Linear Systems
+                  </td>
                   <td className="py-3 px-4 text-slate-600">Test</td>
-                  <td className="py-3 px-4 font-semibold text-slate-900">88/100</td>
+                  <td className="py-3 px-4 font-semibold text-slate-900">
+                    88/100
+                  </td>
                   <td className="py-3 px-4">
                     <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">
                       88%
@@ -209,9 +227,13 @@ export const StudentGradesPage: React.FC = () => {
                   <td className="py-3 px-4 text-slate-600">Nov 8, 2025</td>
                 </tr>
                 <tr className="hover:bg-slate-50">
-                  <td className="py-3 px-4 text-slate-900">Quiz 5: Algebra Review</td>
+                  <td className="py-3 px-4 text-slate-900">
+                    Quiz 5: Algebra Review
+                  </td>
                   <td className="py-3 px-4 text-slate-600">Quiz</td>
-                  <td className="py-3 px-4 font-semibold text-slate-900">19/20</td>
+                  <td className="py-3 px-4 font-semibold text-slate-900">
+                    19/20
+                  </td>
                   <td className="py-3 px-4">
                     <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
                       95%
@@ -238,8 +260,8 @@ export const StudentGradesPage: React.FC = () => {
               <div>
                 <p className="font-medium text-slate-900">Strengths</p>
                 <p className="text-sm text-slate-600">
-                  Excellent performance on homework and participation. Consistent
-                  improvement trend over the last 4 weeks.
+                  Excellent performance on homework and participation.
+                  Consistent improvement trend over the last 4 weeks.
                 </p>
               </div>
             </div>
@@ -249,8 +271,8 @@ export const StudentGradesPage: React.FC = () => {
               <div>
                 <p className="font-medium text-slate-900">Areas for Growth</p>
                 <p className="text-sm text-slate-600">
-                  Focus on advanced topics in tests. Quiz performance varies - consider
-                  reviewing practice problems before quizzes.
+                  Focus on advanced topics in tests. Quiz performance varies -
+                  consider reviewing practice problems before quizzes.
                 </p>
               </div>
             </div>
@@ -260,8 +282,8 @@ export const StudentGradesPage: React.FC = () => {
               <div>
                 <p className="font-medium text-slate-900">Recommendations</p>
                 <p className="text-sm text-slate-600">
-                  Continue current homework practice routine. Schedule extra tutoring
-                  sessions for advanced topics before the next test.
+                  Continue current homework practice routine. Schedule extra
+                  tutoring sessions for advanced topics before the next test.
                 </p>
               </div>
             </div>

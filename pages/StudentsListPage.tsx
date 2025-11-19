@@ -494,7 +494,7 @@ export const StudentsListPage: React.FC = () => {
                           <div className="flex-1 min-w-0">
                             <p
                               className="font-semibold text-slate-800 truncate hover:text-sky-600"
-                              onClick={() => navigate(`/student/${student.id}`)}
+                              onClick={() => navigate(`/students/${student.id}`)}
                             >
                               {student.fullName}
                             </p>
@@ -572,7 +572,7 @@ export const StudentsListPage: React.FC = () => {
 
                       {/* Click to view */}
                       <button
-                        onClick={() => navigate(`/student/${student.id}`)}
+                        onClick={() => navigate(`/students/${student.id}`)}
                         className="mt-3 w-full text-center py-2 bg-sky-50 hover:bg-sky-100 text-sky-600 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                       >
                         View Profile
@@ -592,7 +592,7 @@ export const StudentsListPage: React.FC = () => {
                 <div
                   key={student.id}
                   className="p-4 hover:bg-sky-50 cursor-pointer border-b border-slate-200 last:border-b-0 flex items-center justify-between group transition-colors"
-                  onClick={() => navigate(`/student/${student.id}`)}
+                  onClick={() => navigate(`/students/${student.id}`)}
                 >
                   <div className="flex items-center flex-1">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold mr-4 shadow-md">
