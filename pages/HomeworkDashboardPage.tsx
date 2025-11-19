@@ -125,10 +125,14 @@ export const HomeworkDashboardPage: React.FC = () => {
   // Calculate overall statistics
   const stats = useMemo(() => {
     const total = homeworkRows.length;
-    const allSubmitted = homeworkRows.filter((r) => r.submittedCount > 0).length;
+    const allSubmitted = homeworkRows.filter(
+      (r) => r.submittedCount > 0
+    ).length;
     const allChecked = homeworkRows.filter((r) => r.checkedCount > 0).length;
     const overdue = homeworkRows.filter((r) => {
-      return new Date(r.dueDate) < new Date() && r.submittedCount < r.totalStudents;
+      return (
+        new Date(r.dueDate) < new Date() && r.submittedCount < r.totalStudents
+      );
     }).length;
 
     return { total, allSubmitted, allChecked, overdue };
@@ -173,8 +177,12 @@ export const HomeworkDashboardPage: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Homework Dashboard</h1>
-          <p className="text-slate-600 mt-1">Track assignments and submissions</p>
+          <h1 className="text-3xl font-bold text-slate-900">
+            Homework Dashboard
+          </h1>
+          <p className="text-slate-600 mt-1">
+            Track assignments and submissions
+          </p>
         </div>
         <Button className="gap-2">
           <PlusCircleIcon className="h-4 w-4" />
@@ -190,11 +198,15 @@ export const HomeworkDashboardPage: React.FC = () => {
         </Card>
         <Card className="p-4">
           <p className="text-sm text-slate-600">Submitted</p>
-          <p className="text-3xl font-bold text-blue-600">{stats.allSubmitted}</p>
+          <p className="text-3xl font-bold text-blue-600">
+            {stats.allSubmitted}
+          </p>
         </Card>
         <Card className="p-4">
           <p className="text-sm text-slate-600">Checked</p>
-          <p className="text-3xl font-bold text-green-600">{stats.allChecked}</p>
+          <p className="text-3xl font-bold text-green-600">
+            {stats.allChecked}
+          </p>
         </Card>
         <Card className="p-4 border-2 border-red-200">
           <p className="text-sm text-slate-600">Overdue</p>
@@ -277,7 +289,8 @@ export const HomeworkDashboardPage: React.FC = () => {
                           {row.title}
                         </h3>
                         <p className="text-sm text-slate-600">
-                          {row.isGroup ? "📚 Group:" : "👤 Student:"} {row.assignedTo}
+                          {row.isGroup ? "📚 Group:" : "👤 Student:"}{" "}
+                          {row.assignedTo}
                         </p>
                       </div>
                     </div>
@@ -354,7 +367,11 @@ export const HomeworkDashboardPage: React.FC = () => {
                               </p>
                               {submission.submissionDate && (
                                 <p className="text-xs text-slate-600">
-                                  Submitted: {format(new Date(submission.submissionDate), "MMM d, yyyy")}
+                                  Submitted:{" "}
+                                  {format(
+                                    new Date(submission.submissionDate),
+                                    "MMM d, yyyy"
+                                  )}
                                 </p>
                               )}
                             </div>
@@ -419,13 +436,19 @@ export const HomeworkDashboardPage: React.FC = () => {
                 </h3>
                 <div className="flex gap-4 flex-wrap">
                   <span className="text-sm text-primary-800">
-                    📅 Assigned: {format(new Date(selectedHomework.assignedDate), "MMM d, yyyy")}
+                    📅 Assigned:{" "}
+                    {format(
+                      new Date(selectedHomework.assignedDate),
+                      "MMM d, yyyy"
+                    )}
                   </span>
                   <span className="text-sm text-primary-800">
-                    ⏰ Due: {format(new Date(selectedHomework.dueDate), "MMM d, yyyy")}
+                    ⏰ Due:{" "}
+                    {format(new Date(selectedHomework.dueDate), "MMM d, yyyy")}
                   </span>
                   <span className="text-sm text-primary-800">
-                    {selectedHomework.isGroup ? "👥" : "👤"} {selectedHomework.assignedTo}
+                    {selectedHomework.isGroup ? "👥" : "👤"}{" "}
+                    {selectedHomework.assignedTo}
                   </span>
                 </div>
               </div>
@@ -433,7 +456,9 @@ export const HomeworkDashboardPage: React.FC = () => {
 
             {/* Description */}
             <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-              <p className="text-sm font-semibold text-slate-700 mb-2">Description</p>
+              <p className="text-sm font-semibold text-slate-700 mb-2">
+                Description
+              </p>
               <p className="text-sm text-slate-800 whitespace-pre-wrap">
                 {selectedHomework.description}
               </p>
@@ -483,7 +508,10 @@ export const HomeworkDashboardPage: React.FC = () => {
                       </td>
                       <td className="py-2 px-3 text-slate-700">
                         {submission.submissionDate
-                          ? format(new Date(submission.submissionDate), "MMM d, yyyy")
+                          ? format(
+                              new Date(submission.submissionDate),
+                              "MMM d, yyyy"
+                            )
                           : "-"}
                       </td>
                       <td className="py-2 px-3 text-slate-900 font-medium">

@@ -1,17 +1,27 @@
+import React from "react";
+import { NavLink } from "react-router-dom";
+import {
+  HomeIcon,
+  UsersIcon,
+  SettingsIcon,
+  LogOutIcon,
+  BookOpenIcon,
+  CalendarIcon,
+} from "../icons";
+import { useAppContext } from "../../hooks/useAppContext";
 
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { HomeIcon, UsersIcon, SettingsIcon, LogOutIcon, BookOpenIcon, CalendarIcon } from '../icons';
-import { useAppContext } from '../../hooks/useAppContext';
-
-const NavItem: React.FC<{ to: string; icon: React.ReactNode; label: string }> = ({ to, icon, label }) => (
+const NavItem: React.FC<{
+  to: string;
+  icon: React.ReactNode;
+  label: string;
+}> = ({ to, icon, label }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
       `flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
         isActive
-          ? 'bg-primary-500 text-white'
-          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+          ? "bg-primary-500 text-white"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
       }`
     }
   >
@@ -29,11 +39,31 @@ export const Sidebar: React.FC = () => {
         <h1 className="text-2xl font-bold text-slate-800 ml-2">TutorTrack</h1>
       </div>
       <nav className="flex-1 space-y-2">
-        <NavItem to="/" icon={<HomeIcon className="h-5 w-5" />} label="Dashboard" />
-        <NavItem to="/students" icon={<UsersIcon className="h-5 w-5" />} label="Students" />
-        <NavItem to="/calendar" icon={<CalendarIcon className="h-5 w-5" />} label="Calendar" />
-        <NavItem to="/homework" icon={<BookOpenIcon className="h-5 w-5" />} label="Homework" />
-        <NavItem to="/settings" icon={<SettingsIcon className="h-5 w-5" />} label="Settings" />
+        <NavItem
+          to="/"
+          icon={<HomeIcon className="h-5 w-5" />}
+          label="Dashboard"
+        />
+        <NavItem
+          to="/students"
+          icon={<UsersIcon className="h-5 w-5" />}
+          label="Students"
+        />
+        <NavItem
+          to="/calendar"
+          icon={<CalendarIcon className="h-5 w-5" />}
+          label="Calendar"
+        />
+        <NavItem
+          to="/homework"
+          icon={<BookOpenIcon className="h-5 w-5" />}
+          label="Homework"
+        />
+        <NavItem
+          to="/settings"
+          icon={<SettingsIcon className="h-5 w-5" />}
+          label="Settings"
+        />
       </nav>
       <div className="mt-auto">
         <button

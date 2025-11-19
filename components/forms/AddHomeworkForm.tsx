@@ -119,7 +119,8 @@ export const AddHomeworkForm: React.FC<AddHomeworkFormProps> = ({
             <label
               className="flex items-center gap-3 p-3 border-2 rounded-lg cursor-pointer transition-colors"
               style={{
-                borderColor: assignmentType === "student" ? "#2563eb" : "#e2e8f0",
+                borderColor:
+                  assignmentType === "student" ? "#2563eb" : "#e2e8f0",
                 backgroundColor:
                   assignmentType === "student" ? "#eff6ff" : "transparent",
               }}
@@ -164,7 +165,10 @@ export const AddHomeworkForm: React.FC<AddHomeworkFormProps> = ({
       {/* Selection Dropdown */}
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-2">
-          {assignmentType === "student" ? "Select Student" : "Select Group/Class"} *
+          {assignmentType === "student"
+            ? "Select Student"
+            : "Select Group/Class"}{" "}
+          *
         </label>
         {assignmentType === "student" ? (
           <select
