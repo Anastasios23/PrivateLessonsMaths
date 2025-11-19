@@ -12,6 +12,7 @@ import { useAppContext } from "./hooks/useAppContext";
 import { SignUpPage } from "./pages/SignUpPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { CalendarPage } from "./pages/CalendarPage";
+import { HomeworkDashboardPage } from "./pages/HomeworkDashboardPage";
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
   children,
@@ -91,6 +92,16 @@ const AppRoutes: React.FC = () => {
           <PrivateRoute>
             <Layout>
               <CalendarPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/homework"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <HomeworkDashboardPage />
             </Layout>
           </PrivateRoute>
         }

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { HomeIcon, UsersIcon, SettingsIcon, LogOutIcon, BookOpenIcon } from '../icons';
+import { HomeIcon, UsersIcon, SettingsIcon, LogOutIcon, BookOpenIcon, CalendarIcon } from '../icons';
 import { useAppContext } from '../../hooks/useAppContext';
 
 const NavItem: React.FC<{ to: string; icon: React.ReactNode; label: string }> = ({ to, icon, label }) => (
@@ -31,6 +31,8 @@ export const Sidebar: React.FC = () => {
       <nav className="flex-1 space-y-2">
         <NavItem to="/" icon={<HomeIcon className="h-5 w-5" />} label="Dashboard" />
         <NavItem to="/students" icon={<UsersIcon className="h-5 w-5" />} label="Students" />
+        <NavItem to="/calendar" icon={<CalendarIcon className="h-5 w-5" />} label="Calendar" />
+        <NavItem to="/homework" icon={<BookOpenIcon className="h-5 w-5" />} label="Homework" />
         <NavItem to="/settings" icon={<SettingsIcon className="h-5 w-5" />} label="Settings" />
       </nav>
       <div className="mt-auto">

@@ -60,7 +60,8 @@ export enum HomeworkStatus {
 
 export interface Homework {
   id: string;
-  studentId: string;
+  studentId?: string; // optional - if groupId is used
+  groupId?: string; // optional - for group assignments
   sessionId?: string;
   assignedDate: string; // ISO 8601 date (YYYY-MM-DD)
   dueDate: string; // ISO 8601 date (YYYY-MM-DD)
