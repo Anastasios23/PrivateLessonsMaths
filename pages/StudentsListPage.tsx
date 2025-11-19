@@ -494,7 +494,9 @@ export const StudentsListPage: React.FC = () => {
                           <div className="flex-1 min-w-0">
                             <p
                               className="font-semibold text-slate-800 truncate hover:text-sky-600"
-                              onClick={() => navigate(`/students/${student.id}`)}
+                              onClick={() =>
+                                navigate(`/students/${student.id}`)
+                              }
                             >
                               {student.fullName}
                             </p>
