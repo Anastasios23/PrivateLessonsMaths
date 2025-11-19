@@ -13,6 +13,7 @@ import { SignUpPage } from "./pages/SignUpPage";
 import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 import { CalendarPage } from "./pages/CalendarPage";
 import { HomeworkDashboardPage } from "./pages/HomeworkDashboardPage";
+import { GradesPage } from "./pages/GradesPage";
 
 const PrivateRoute: React.FC<{ children: React.ReactElement }> = ({
   children,
@@ -102,6 +103,16 @@ const AppRoutes: React.FC = () => {
           <PrivateRoute>
             <Layout>
               <HomeworkDashboardPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/grades"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <GradesPage />
             </Layout>
           </PrivateRoute>
         }
