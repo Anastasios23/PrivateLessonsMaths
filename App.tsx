@@ -5,6 +5,9 @@ import { Layout } from "./components/layout/Layout";
 import { DashboardPage } from "./pages/DashboardPage";
 import { StudentsListPage } from "./pages/StudentsListPage";
 import { StudentDetailPage } from "./pages/StudentDetailPage";
+import { StudentLessonsPage } from "./pages/StudentLessonsPage";
+import { StudentHomeworkPage } from "./pages/StudentHomeworkPage";
+import { StudentGradesPage } from "./pages/StudentGradesPage";
 import { ReportsPage } from "./pages/ReportsPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { AuthPage } from "./pages/AuthPage";
@@ -73,6 +76,36 @@ const AppRoutes: React.FC = () => {
           <PrivateRoute>
             <Layout>
               <StudentDetailPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/students/:studentId/lessons"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <StudentLessonsPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/students/:studentId/homework"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <StudentHomeworkPage />
+            </Layout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/students/:studentId/grades"
+        element={
+          <PrivateRoute>
+            <Layout>
+              <StudentGradesPage />
             </Layout>
           </PrivateRoute>
         }
